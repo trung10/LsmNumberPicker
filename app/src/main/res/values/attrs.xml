@@ -6,6 +6,7 @@
         <attr name="lsmMaxValue" format="integer" />
         <attr name="lsmTextSize" format="dimension" />
         <attr name="lsmTextColor" format="color" />
+        <attr name="stepCount" format="integer" />
         <attr name="lsmTextStyle">
             <flag name="normal" value="0" />
             <flag name="bold" value="1" />

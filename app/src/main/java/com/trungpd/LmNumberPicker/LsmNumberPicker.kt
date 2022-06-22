@@ -26,21 +26,44 @@ class LsmNumberPicker : NumberPicker {
         private const val DEFAULT_TEXT_COLOR = Color.BLACK
         private const val DEFAULT_TEXT_SIZE = 40
         private const val DEFAULT_TEXT_STYLE = Typeface.NORMAL
-        private const val DEFAULT_VALUE = 2
+        private const val DEFAULT_VALUE = 4
         private const val MAX_VALUE = 10
         private const val DEFAULT_EDITABLE = false
         private const val DEFAULT_WRAPPED = false
     }
 
-    private val onValueChangeListener = object : OnValueChangeListener {
-        override fun onValueChange(picker: NumberPicker?, oldVal: Int, newVal: Int) {
+    private val onValueChangeListener =
+        OnValueChangeListener { picker, oldVal, newVal ->
+            Log.e("Trung", "oldVal data: $oldVal")
+            Log.e("Trung", "newVal data: $newVal")
+
             picker?.value = if (newVal < oldVal)
                 oldVal - stepCount
             else
                 oldVal + stepCount
         }
 
+    val format = Formatter { v ->
+        Log.e("Trung", "format data: $v")
+        Log.e("Trung", "NumberPicker value: $value")
+
+        "$v"
+        /*if (v % stepCount == 0) {
+            "$v"
+        } else if (v > stepCount && (v - stepCount) <= minValue){
+             "$minValue"
+         } else if ((v + stepCount) >= maxValue){
+             "$maxValue"
+         } else {
+            if ( v < value) {
+                "${v - stepCount + value - v}"
+            } else {
+                "${v + stepCount - (v - value)}"
+            }
+        }*/
     }
+
+    //fun  getCurrentValue(): Int? = if (selectorIndexToStringCache != null) selectorIndexToStringCache?[] else null
 
     var stepCount: Int = DEFAULT_VALUE
         set(value) {
@@ -111,35 +134,6 @@ class LsmNumberPicker : NumberPicker {
         field
     }
 
-    constructor(
-        context: Context,
-        separatorColor: Int = DEFAULT_SEPARATOR_COLOR,
-        textColor: Int = DEFAULT_TEXT_COLOR,
-        textSize: Int = DEFAULT_TEXT_SIZE,
-        textStyle: Int = DEFAULT_TEXT_STYLE,
-        editable: Boolean = DEFAULT_EDITABLE,
-        wrapped: Boolean = DEFAULT_EDITABLE,
-        defaultValue: Int = DEFAULT_VALUE,
-        minValue: Int = DEFAULT_VALUE,
-        maxValue: Int = MAX_VALUE,
-        fontName: String? = null,
-        formatter: Formatter? = null
-    ) : super(context) {
-        this.separatorColor = separatorColor
-        this.textColorNumberPicker = textColor
-        this.textSize = textSize
-        this.textStyle = textStyle
-        this.fontName = fontName
-        this.editable = editable
-        this.wrapSelectorWheel = wrapped
-        this.value = defaultValue
-        this.minValue = minValue
-        this.maxValue = maxValue
-        setFormatter(formatter)
-
-        disableFocusability()
-    }
-
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.NumberPicker, 0, 0)
 
@@ -156,7 +150,7 @@ class LsmNumberPicker : NumberPicker {
         value = a.getInteger(R.styleable.NumberPicker_lsmDefaultValue, DEFAULT_VALUE)
         minValue = a.getInteger(R.styleable.NumberPicker_lsmMinValue, DEFAULT_VALUE)
         maxValue = a.getInteger(R.styleable.NumberPicker_lsmMaxValue, MAX_VALUE)
-
+        stepCount = a.getInteger(R.styleable.NumberPicker_stepCount, MAX_VALUE)
         a.recycle()
 
         disableFocusability()
@@ -171,7 +165,9 @@ class LsmNumberPicker : NumberPicker {
 
         inputText?.filters = arrayOf(InputTextFilter())
 
-        //setOnValueChangedListener(onValueChangeListener)
+        setOnValueChangedListener(onValueChangeListener)
+
+        setFormatter(format)
     }
 
     val inputText: EditText? by lazy {
@@ -193,11 +189,6 @@ class LsmNumberPicker : NumberPicker {
 
     val selectorIndexToStringCache: IntArray? by lazy {
         try {
-            val data = NumberPicker::class.java.declaredFields
-
-            for (i in data){
-                Log.e("Trung", "name: ${i}")
-            }
 
             val f = NumberPicker::class.java.getDeclaredField("mSelectorIndices")
 
@@ -284,9 +275,12 @@ class LsmNumberPicker : NumberPicker {
         override fun filter(
             source: CharSequence, start: Int, end: Int, dest: Spanned, dstart: Int, dend: Int
         ): CharSequence {
+            Log.e("Trung", "start:")
             for (i in selectorIndexToStringCache!!) {
                 Log.e("Trung", "value $i")
             }
+
+
 
             val text =  source.subSequence(start, end).toString()
             return when {

@@ -14,6 +14,7 @@
         app:lsmMinValue="0"
         app:lsmMaxValue="100"
         app:lsmEditable="true"
+        app:stepCount="6"
         android:maxLength="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
