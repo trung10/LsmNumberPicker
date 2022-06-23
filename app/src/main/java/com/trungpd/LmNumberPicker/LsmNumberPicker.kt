@@ -47,20 +47,18 @@ class LsmNumberPicker : NumberPicker {
         Log.e("Trung", "format data: $v")
         Log.e("Trung", "NumberPicker value: $value")
 
-        "$v"
-        /*if (v % stepCount == 0) {
+
+        if (v % stepCount == 0) {
             "$v"
         } else if (v > stepCount && (v - stepCount) <= minValue){
              "$minValue"
-         } else if ((v + stepCount) >= maxValue){
-             "$maxValue"
          } else {
             if ( v < value) {
                 "${v - stepCount + value - v}"
             } else {
                 "${v + stepCount - (v - value)}"
             }
-        }*/
+        }
     }
 
     //fun  getCurrentValue(): Int? = if (selectorIndexToStringCache != null) selectorIndexToStringCache?[] else null

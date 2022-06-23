@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         app:lsmMinValue="0"
-        app:lsmMaxValue="100"
+        app:lsmMaxValue="102"
         app:lsmEditable="true"
         app:stepCount="6"
         android:maxLength="4"
